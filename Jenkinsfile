@@ -36,7 +36,7 @@ pipeline {
                     sh """
                     mvn sonar:sonar \
                         -Dsonar.projectKey=my-spring-api \
-                        -Dsonar.host.url=http://<your-sonarqube-server>:9000 \
+                        -Dsonar.host.url=http://localhost:9000 \
                         -Dsonar.login=${env.SONAR_TOKEN}
                     """
                 }
