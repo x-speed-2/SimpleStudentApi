@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 VOLUME /tmp
 
 # Copy the application JAR
-ARG JAR_FILE=target/my-spring-api.jar
+ARG JAR_FILE=target/SimpleStudentApi-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
 
 # Expose the application port
