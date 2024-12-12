@@ -30,7 +30,7 @@ pipeline {
                 sh 'mvn test'
             }
         }
-         stage('Code Quality Analysis') {
+        stage('Code Quality Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     sh """
@@ -42,6 +42,7 @@ pipeline {
                 }
             }
         }
+
         stage('Package') {
             steps {
                 sh 'mvn package'
