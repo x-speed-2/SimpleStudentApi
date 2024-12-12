@@ -37,7 +37,7 @@ pipeline {
                     mvn sonar:sonar \
                         -Dsonar.projectKey=my-spring-api \
                         -Dsonar.host.url=http://<your-sonarqube-server>:9000 \
-                        -Dsonar.login=${env.SONAR_TOKEN} // Use token as a secure environment variable
+                        -Dsonar.login=${env.SONAR_TOKEN}
                     """
                 }
             }
