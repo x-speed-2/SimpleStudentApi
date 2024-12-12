@@ -33,12 +33,12 @@ pipeline {
         stage('Code Quality Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh """
+                    sh '''
                     mvn sonar:sonar \
                         -Dsonar.projectKey=SimpleStudentApi \
                         -Dsonar.host.url=http://localhost:9000 \
-                        -Dsonar.login=${credentials('sonar-token')}
-                    """
+                        -Dsonar.login=$SONARQUBE_TOKEN
+                    '''
                 }
             }
         }
