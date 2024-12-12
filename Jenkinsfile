@@ -9,6 +9,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'docker-hub' 
         DOCKER_IMAGE = 'cz2edtee34/my-spring-api'
         DOCKER_TAG = 'latest'
+        SONARQUBE_ENV = 'SonarQube'
     }
 
      stages {
@@ -27,6 +28,18 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'mvn test'
+            }
+        }
+         stage('Code Quality Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh """
+                    mvn sonar:sonar \
+                        -Dsonar.projectKey=my-spring-api \
+                        -Dsonar.host.url=http://<your-sonarqube-server>:9000 \
+                        -Dsonar.login=${env.SONAR_TOKEN} // Use token as a secure environment variable
+                    """
+                }
             }
         }
         stage('Package') {
