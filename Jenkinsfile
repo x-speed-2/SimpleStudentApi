@@ -11,7 +11,7 @@ pipeline {
         DOCKER_TAG = 'latest'
     }
 
-    stages {
+     stages {
         stage('Checkout') {
             steps {
                 checkout scm
@@ -27,6 +27,20 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'mvn test'
+            }
+        }
+        stage('Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+        stage('Verify JAR') {
+            steps {
+                script {
+                    if (!fileExists('target/my-spring-api.jar')) {
+                        error "JAR file not found. Build failed."
+                    }
+                }
             }
         }
 
