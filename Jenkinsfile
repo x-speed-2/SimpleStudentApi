@@ -37,7 +37,7 @@ pipeline {
         stage('Verify JAR') {
             steps {
                 script {
-                    if (!fileExists('target/my-spring-api.jar')) {
+                    if (!fileExists('target/SimpleStudentApi-0.0.1-SNAPSHOT.jar')) {
                         error "JAR file not found. Build failed."
                     }
                 }
