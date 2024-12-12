@@ -37,7 +37,7 @@ pipeline {
                     mvn sonar:sonar \
                         -Dsonar.projectKey=SimpleStudentApi \
                         -Dsonar.host.url=http://localhost:9000 \
-                        -Dsonar.login=${env.SONAR_TOKEN}
+                        -Dsonar.login=${credentials('sonar-token')}
                     """
                 }
             }
