@@ -86,6 +86,7 @@ pipeline {
                 sshagent(['remote-server-ssh']) {
                     sh """
                     ssh $REMOTE_SERVER "
+                        sudo -i &&
                         docker stop \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true &&
                         docker rm \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true &&
                         docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} &&
