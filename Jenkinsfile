@@ -85,9 +85,12 @@ pipeline {
             steps {
                 sshagent(['remote-server-ssh']) {
                     sh """
-                    ssh $REMOTE_SERVER "sudo -i && docker stop $(docker ps -a -q --filter ancestor=${DOCKER_IMAGE}) && docker rm $(docker ps -a -q --filter ancestor=${DOCKER_IMAGE})"
-                    ssh $REMOTE_SERVER "sudo -i && docker pull cz2edtee34/${DOCKER_IMAGE}:${DOCKER_TAG}"
-                    ssh $REMOTE_SERVER "sudo -i && docker run -d -p 8883:8080 cz2edtee34/${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    ssh $REMOTE_SERVER "
+                        docker stop \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true &&
+                        docker rm \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true &&
+                        docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} &&
+                        docker run -d -p 8883:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    "
                     """
                 }
             }
