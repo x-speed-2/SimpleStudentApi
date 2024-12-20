@@ -63,7 +63,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                     docker build -t ${DOCKER_IMAGE}:arm64 --build-arg ARCH=arm64v8/ .
+                     docker build -t ${DOCKER_IMAGE}:arm64 --build-arg ARCH=arm64v8 .
                     """
                 }
             }
