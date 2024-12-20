@@ -59,27 +59,11 @@ pipeline {
                 }
             }
         }
-
-        stage('Set up Docker Buildx') {
-            steps {
-                script {
-                    sh '''
-                    # Create and use a Buildx builder
-                    docker buildx create --use --name multiarch-builder || docker buildx use multiarch-builder
-                    docker buildx inspect --bootstrap
-                    '''
-                }
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
                     sh """
-                    docker buildx build \
-                        --platform linux/amd64,linux/arm64/v8 \
-                        -t ${DOCKER_IMAGE}:${DOCKER_TAG} \
-                        --push .
+                     docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} --build-arg ARCH=arm32v7/ . .
                     """
                 }
             }
