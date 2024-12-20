@@ -63,7 +63,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                     docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} --build-arg ARCH=arm32v7/ .
+                     docker build -t ${DOCKER_IMAGE}:arm64 --build-arg ARCH=arm64v8/ .
                     """
                 }
             }
@@ -74,7 +74,7 @@ pipeline {
                 script {
                     docker.withRegistry('', DOCKER_CREDENTIALS_ID) {
                         sh """
-                        docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker push ${DOCKER_IMAGE}:arm64
                         """
                     }
                 }
@@ -86,10 +86,10 @@ pipeline {
                     sh """
                     ssh -o StrictHostKeyChecking=no $REMOTE_SERVER "
                         sudo -i &&
-                        sudo docker stop \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true &&
-                        sudo docker rm \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true &&
-                        sudo docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} &&
-                        sudo docker run -d -p 8883:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        sudo docker stop \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:arm64) || true &&
+                        sudo docker rm \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:arm64) || true &&
+                        sudo docker pull ${DOCKER_IMAGE}:arm64 &&
+                        sudo docker run -d -p 8883:8080 ${DOCKER_IMAGE}:arm64
                     "
                     """
                 }
