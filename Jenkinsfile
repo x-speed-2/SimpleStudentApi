@@ -63,7 +63,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                     docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} --build-arg ARCH=arm32v7/ . .
+                     docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} --build-arg ARCH=arm32v7/ .
                     """
                 }
             }
