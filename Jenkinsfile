@@ -87,10 +87,10 @@ pipeline {
                     sh """
                     ssh -o StrictHostKeyChecking=no $REMOTE_SERVER "
                         sudo -i &&
-                        docker stop \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true &&
-                        docker rm \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true &&
-                        docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} &&
-                        docker run -d -p 8883:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        sudo docker stop \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true &&
+                        sudo docker rm \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true &&
+                        sudo docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} &&
+                        sudo docker run -d -p 8883:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
                     "
                     """
                 }
