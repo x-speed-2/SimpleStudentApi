@@ -10,7 +10,7 @@ pipeline {
         DOCKER_IMAGE = 'cz2edtee34/my-spring-api'
         DOCKER_TAG = 'latest'
         SONARQUBE_ENV = 'SonarQube'
-        REMOTE_SERVER = 'ubuntu@193.122.49.52'
+        REMOTE_SERVER = 'ubuntu@152.70.168.196'
     }
 
      stages {
