@@ -10,6 +10,7 @@ pipeline {
         DOCKER_IMAGE = 'cz2edtee34/my-spring-api'
         DOCKER_TAG = 'latest'
         SONARQUBE_ENV = 'SonarQube'
+        REMOTE_SERVER = 'ubuntu@193.122.49.52'
     }
 
      stages {
@@ -77,6 +78,17 @@ pipeline {
                         docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
                         """
                     }
+                }
+            }
+        }
+        stage('Deploy to Remote Server') {
+            steps {
+                sshagent(['remote-server-ssh']) {
+                    sh """
+                    ssh $REMOTE_SERVER "sudo -i && docker stop $(docker ps -a -q --filter ancestor=${DOCKER_IMAGE}) && docker rm $(docker ps -a -q --filter ancestor=${DOCKER_IMAGE})"
+                    ssh $REMOTE_SERVER "sudo -i && docker pull cz2edtee34/${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    ssh $REMOTE_SERVER "sudo -i && docker run -d -p 8883:8080 cz2edtee34/${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    """
                 }
             }
         }
