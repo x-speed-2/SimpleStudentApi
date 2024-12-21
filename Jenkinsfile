@@ -72,7 +72,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    trivy image ${DOCKER_IMAGE}:${DOCKER_TAG} > trivy_report.txt
+                    sudo trivy image ${DOCKER_IMAGE}:${DOCKER_TAG} > trivy_report.txt
                     cat trivy_report.txt
                     """
                 }
