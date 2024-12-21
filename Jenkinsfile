@@ -72,12 +72,14 @@ pipeline {
             steps {
                 script {
                     sh """
-                    sudo trivy image ${DOCKER_IMAGE}:${DOCKER_TAG} > trivy_report.txt
+                    docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                        aquasec/trivy:latest image ${DOCKER_IMAGE}:${DOCKER_TAG} > trivy_report.txt
                     cat trivy_report.txt
                     """
                 }
             }
         }
+
         stage('Push to Docker Hub') {
             steps {
                 script {
