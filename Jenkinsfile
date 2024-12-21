@@ -68,7 +68,16 @@ pipeline {
                 }
             }
         }
-
+        stage('Scan Docker Image for Vulnerabilities') {
+            steps {
+                script {
+                    sh """
+                    trivy image ${DOCKER_IMAGE}:${DOCKER_TAG} > trivy_report.txt
+                    cat trivy_report.txt
+                    """
+                }
+            }
+        }
         stage('Push to Docker Hub') {
             steps {
                 script {
