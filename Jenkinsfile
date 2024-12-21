@@ -97,6 +97,8 @@ pipeline {
                     sh """
                     ssh -o StrictHostKeyChecking=no $REMOTE_SERVER "
                         sudo -i &&
+                        sudo docker ps -q --filter "ancestor=${DOCKER_IMAGE}" | xargs -I {} docker rm -f {} &&
+                        sudo docker images -q ${DOCKER_IMAGE} | xargs docker rmi -f
                         sudo docker stop \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true &&
                         sudo docker rm \$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true &&
                         sudo docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} &&
