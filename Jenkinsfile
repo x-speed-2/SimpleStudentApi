@@ -73,7 +73,7 @@ pipeline {
                 script {
                     sh """
                     docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-                        aquasec/trivy:latest image ${DOCKER_IMAGE}:${DOCKER_TAG} > trivy_report.txt
+                        aquasec/trivy:0.55.2 image ${DOCKER_IMAGE}:${DOCKER_TAG} > trivy_report.txt
                     cat trivy_report.txt
                     """
                 }
