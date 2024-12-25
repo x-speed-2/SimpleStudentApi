@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS_ID = 'docker-hub' 
-        DOCKER_IMAGE = 'cz2edtee34/my-spring-api'
+        DOCKER_IMAGE = 'r2fzqiky11/student-api'
         DOCKER_TAG = 'latest'
         SONARQUBE_ENV = 'SonarQube'
         REMOTE_SERVER = 'ubuntu@152.70.168.196'
