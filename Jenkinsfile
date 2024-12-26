@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_CREDENTIALS_ID = 'docker-hub' 
+        DOCKER_CREDENTIALS_ID = 'docker-hub-cnx' 
         DOCKER_IMAGE = 'r2fzqiky11/student-api'
         DOCKER_TAG = 'latest'
         SONARQUBE_ENV = 'SonarQube'
