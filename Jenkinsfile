@@ -11,7 +11,7 @@ pipeline {
         DOCKER_TAG = 'latest'
         SONARQUBE_ENV = 'SonarQube'
         REMOTE_SERVER = 'ubuntu@152.70.168.196'
-        SONARQUBE_CREDENTIALS_ID = 'sonarqube-credentials'
+        SONARQUBE_CREDENTIALS_ID = 'sonar-token'
     }
 
     stages {
@@ -36,18 +36,18 @@ pipeline {
         stage('Code Quality Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    withCredentials([usernamePassword(credentialsId: SONARQUBE_CREDENTIALS_ID, usernameVariable: 'SONAR_USER', passwordVariable: 'SONAR_PASS')]) {
+                    withCredentials([string(credentialsId: SONARQUBE_TOKEN_ID, variable: 'SONAR_TOKEN')]) {
                         sh '''
                         mvn sonar:sonar \
                             -Dsonar.projectKey=SimpleStudentApi \
                             -Dsonar.host.url=http://localhost:9000 \
-                            -Dsonar.login=$SONAR_USER \
-                            -Dsonar.password=$SONAR_PASS
+                            -Dsonar.login=$SONAR_TOKEN
                         '''
                     }
                 }
             }
         }
+
 
         stage('Package') {
             steps {
