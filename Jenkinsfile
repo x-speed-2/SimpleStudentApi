@@ -15,23 +15,18 @@ pipeline {
     }
 
     stages {
-stage('Code Quality Analysis') {
-    steps {
-        withSonarQubeEnv('SonarQube') {
-            withCredentials([usernamePassword(credentialsId: 'SONARQUBE_CREDENTIALS_ID', usernameVariable: 'SONAR_USER', passwordVariable: 'SONAR_PASS')]) {
-                sh '''
-                echo "Sonar Project Key: SimpleStudentApi"
-                echo "Sonar Host URL: http://localhost:9000"
-                echo "Sonar User: $SONAR_USER"
-                echo "Sonar Password: $SONAR_PASS"
-                '''
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') { // Use the SonarQube environment
+                    sh '''
+                        mvn sonar:sonar \
+                        -Dsonar.projectKey=your-project-key \
+                        -Dsonar.host.url=http://your-sonarqube-url \
+                        -Dsonar.login=$SONARQUBE_SERVER
+                    '''
+                }
             }
         }
-    }
-}
-
-
-
         stage('Package') {
             steps {
                 sh 'mvn package'
