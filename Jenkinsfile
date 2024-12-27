@@ -11,7 +11,7 @@ pipeline {
         DOCKER_TAG = 'latest'
         SONARQUBE_SERVER = 'SonarQube'
         REMOTE_SERVER = 'ubuntu@152.70.168.196'
-        SONARQUBE_CREDENTIALS_ID = 'SONARQUBE_CREDENTIALS_ID'
+        SONARQUBE_CREDENTIALS_ID = 'sonarqube-credentials'
     }
 
     stages {
