@@ -20,8 +20,8 @@ pipeline {
                 withSonarQubeEnv('SonarQube') { // Use the SonarQube environment
                     sh '''
                         mvn sonar:sonar \
-                        -Dsonar.projectKey=your-project-key \
-                        -Dsonar.host.url=http://your-sonarqube-url \
+                        -Dsonar.projectKey=SimpleStudentApi \
+                        -Dsonar.host.url=http://localhost:9000 \
                         -Dsonar.login=$SONARQUBE_SERVER
                     '''
                 }
