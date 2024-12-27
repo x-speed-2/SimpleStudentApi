@@ -18,8 +18,13 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                  withCredentials([usernamePassword(credentialsId: SONARQUBE_CREDENTIALS_ID, usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    echo "Username: ${USER}"
-                    echo "Password: ${PASS}"
+                    sh '''
+                        mvn sonar:sonar \
+                        -Dsonar.projectKey=SimpleStudentApi \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.login=$USER \
+                        -Dsonar.password=$PASS
+                    '''
                 }
             }
         }
