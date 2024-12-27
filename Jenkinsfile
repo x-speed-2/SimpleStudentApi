@@ -36,14 +36,16 @@ pipeline {
         stage('Code Quality Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    withCredentials([string(credentialsId: SONARQUBE_TOKEN_ID, variable: 'SONAR_TOKEN')]) {
+                    withCredentials([usernamePassword(credentialsId: 'SONARQUBE_CREDENTIALS_ID', usernameVariable: 'SONAR_USER', passwordVariable: 'SONAR_PASS')]) {
                         sh '''
                         mvn sonar:sonar \
                             -Dsonar.projectKey=SimpleStudentApi \
                             -Dsonar.host.url=http://localhost:9000 \
-                            -Dsonar.login=$SONAR_TOKEN
+                            -Dsonar.login=$SONAR_USER \
+                            -Dsonar.password=$SONAR_PASS
                         '''
                     }
+
                 }
             }
         }
