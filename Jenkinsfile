@@ -15,6 +15,23 @@ pipeline {
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
         stage('SonarQube Analysis') {
             steps {
                  withCredentials([usernamePassword(credentialsId: SONARQUBE_CREDENTIALS_ID, usernameVariable: 'USER', passwordVariable: 'PASS')]) {
