@@ -9,7 +9,6 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'docker-hub-cnx' 
         DOCKER_IMAGE = 'r2fzqiky11/student-api'
         DOCKER_TAG = 'latest'
-        SONARQUBE_SERVER = 'SonarQube'
         REMOTE_SERVER = 'ubuntu@152.70.168.196'
         SONARQUBE_CREDENTIALS_ID = 'sonarqube-credentials'
     }
