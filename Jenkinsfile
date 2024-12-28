@@ -31,24 +31,19 @@ pipeline {
                 sh 'mvn test'
             }
         }
-
-        stage('Code Quality Analysis') {
+        stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    withCredentials([usernamePassword(credentialsId: 'SONARQUBE_CREDENTIALS_ID', usernameVariable: 'SONAR_USER', passwordVariable: 'SONAR_PASS')]) {
-                        sh '''
+                 withCredentials([usernamePassword(credentialsId: SONARQUBE_CREDENTIALS_ID, usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    sh '''
                         mvn sonar:sonar \
-                            -Dsonar.projectKey=SimpleStudentApi \
-                            -Dsonar.host.url=http://localhost:9000 \
-                            -Dsonar.login=$SONAR_USER \
-                            -Dsonar.password=$SONAR_PASS
-                        '''
-                    }
-
+                        -Dsonar.projectKey=SimpleStudentApi \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.login=$USER \
+                        -Dsonar.password=$PASS
+                    '''
                 }
             }
         }
-
         stage('Package') {
             steps {
                 sh 'mvn package'
@@ -78,7 +73,7 @@ pipeline {
                 script {
                     sh '''
                     docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-                        aquasec/trivy:0.55.2 image ${DOCKER_IMAGE}:${DOCKER_TAG} > trivy_report.txt
+                        aquasec/trivy:0.58.1 image ${DOCKER_IMAGE}:${DOCKER_TAG} > trivy_report.txt
                     cat trivy_report.txt
                     '''
                 }
