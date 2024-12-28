@@ -89,6 +89,28 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to Remote Server') {
+            steps {
+                sshagent(['remote-server-ssh']) {
+                    sh """
+                    ssh -o StrictHostKeyChecking=no $REMOTE_SERVER << 'EOF'
+                        CONTAINER_ID=\$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG})
+                        if [ -n "\$CONTAINER_ID" ]; then
+                            docker stop \$CONTAINER_ID
+                            docker rm \$CONTAINER_ID
+                        fi
+                        
+                        # Pull the latest image
+                        docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        
+                        # Run the new container
+                        docker run -d --name my-spring-api -p 8883:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    EOF
+                    """
+                }
+            }
+        }
+
     }
 
     post {
