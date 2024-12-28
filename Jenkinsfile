@@ -10,6 +10,7 @@ pipeline {
         DOCKER_IMAGE = 'r2fzqiky11/student-api'
         DOCKER_TAG = 'latest'
         REMOTE_SERVER = 'ubuntu@152.70.168.196'
+        REMOTE_SERVER_ID = 'remote-server-ssh'
         SONARQUBE_CREDENTIALS_ID = 'sonarqube-credentials'
     }
 
