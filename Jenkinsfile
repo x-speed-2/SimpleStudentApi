@@ -100,10 +100,7 @@ pipeline {
                             docker rm \$CONTAINER_ID
                         fi
                         
-                        # Pull the latest image
                         docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        
-                        # Run the new container
                         docker run -d --name my-spring-api -p 8883:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
                     EOF
                     """
