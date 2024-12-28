@@ -24,24 +24,9 @@ pipeline {
                 sshagent(['remote-server-ssh']) {  // Ensure this is your correct SSH credentials ID
                     script {
                         sh """
-                        ssh -o StrictHostKeyChecking=no ${REMOTE_SERVER} << EOF
-                            # Stop and remove containers based on the image tag, if they exist
-                            CONTAINERS=\$(docker ps -a -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG})
-                            if [ -n "\$CONTAINERS" ]; then
-                                docker stop \$CONTAINERS
-                                docker rm \$CONTAINERS
-                            fi
-
-                            # Pull the latest Docker image
+                        ssh -o StrictHostKeyChecking=no $REMOTE_SERVER << EOF
                             sudo docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
-
-                            # Check for port availability, if 8883 is in use, try binding to another port
-                            if sudo lsof -i :8883; then
-                                echo 'Port 8883 is already in use, attempting port 8884'
-                                sudo docker run -d -p 8884:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
-                            else
-                                sudo docker run -d -p 8883:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
-                            fi
+                            sudo docker run -d -p 8883:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
                         EOF
                         """
                     }
