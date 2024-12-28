@@ -27,7 +27,6 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no $REMOTE_SERVER << EOF
                             sudo docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
                             sudo docker run -d -p 8883:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        EOF
                         """
                     }
                 }
