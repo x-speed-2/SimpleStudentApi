@@ -23,15 +23,11 @@ pipeline {
             steps {
                 sshagent(['remote-server-ssh']) {
                     sh """
-                    ssh -o StrictHostKeyChecking=no $REMOTE_SERVER << 'EOF'
-                        CONTAINER_ID=\$(docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG})
-                        if [ -n "\$CONTAINER_ID" ]; then
-                            docker stop \$CONTAINER_ID
-                            docker rm \$CONTAINER_ID
-                        fi
-                        
-                        docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        docker run -d --name my-spring-api -p 8883:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    ssh -o StrictHostKeyChecking=no $REMOTE_SERVER << EOF
+                        sudo docker stop \$(sudo docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true
+                        sudo docker rm \$(sudo docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG}) || true
+                        sudo docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        sudo docker run -d -p 8883:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
                     EOF
                     """
                 }
