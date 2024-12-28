@@ -19,9 +19,85 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Deploy to Remote Server') {
+
+        stage('Build') {
             steps {
-                sshagent(['remote-server-ssh']) {  // Ensure this is your correct SSH credentials ID
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Code Quality Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    withCredentials([usernamePassword(credentialsId: 'SONARQUBE_CREDENTIALS_ID', usernameVariable: 'SONAR_USER', passwordVariable: 'SONAR_PASS')]) {
+                        sh '''
+                        mvn sonar:sonar \
+                            -Dsonar.projectKey=SimpleStudentApi \
+                            -Dsonar.host.url=http://localhost:9000 \
+                            -Dsonar.login=$SONAR_USER \
+                            -Dsonar.password=$SONAR_PASS
+                        '''
+                    }
+
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+
+        stage('Verify JAR') {
+            steps {
+                script {
+                    if (!fileExists('target/SimpleStudentApi-0.0.1-SNAPSHOT.jar')) {
+                        error "JAR file not found. Build failed."
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}", ".")
+                }
+            }
+        }
+
+        stage('Scan Docker Image for Vulnerabilities') {
+            steps {
+                script {
+                    sh '''
+                    docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                        aquasec/trivy:0.55.2 image ${DOCKER_IMAGE}:${DOCKER_TAG} > trivy_report.txt
+                    cat trivy_report.txt
+                    '''
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry('', DOCKER_CREDENTIALS_ID) {
+                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
+                    }
+                }
+            }
+        }
+
+         stage('Deploy to Remote Server') {
+            steps {
+                sshagent(['remote-server-ssh']) {
                     script {
                         sh """
                         ssh -o StrictHostKeyChecking=no $REMOTE_SERVER << EOF
@@ -32,8 +108,6 @@ pipeline {
                 }
             }
         }
-
-
     }
 
     post {
@@ -41,10 +115,10 @@ pipeline {
             junit '**/target/surefire-reports/*.xml'
         }
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Pipeline completed'
         }
         failure {
-            echo 'Pipeline failed. Check the logs for details.'
+            echo 'Pipeline failed'
         }
     }
 }
